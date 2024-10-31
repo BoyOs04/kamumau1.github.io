@@ -11,10 +11,11 @@
             --shadow-color: rgba(0, 0, 0, 0.1);
             --highlight-color: #00000035;
             --text-color: #555;
+            --hati:rgb
         }
 
         body {
-            font-family: 'Montserrat', serif;
+            font-family: 'Pacifico','Montserrat', serif;
             background-color: var(--main-bg-color);
             font-size: 1.5vw;
             text-align: center;
@@ -25,6 +26,11 @@
             margin: 0;
             overflow: hidden; /* Menyembunyikan scrollbar */
             position: relative; /* Untuk mengatur posisi emoji */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="white" stroke-width="1" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>');
+            background-repeat: repeat; /* Mengulangi gambar latar belakang */
+            background-size: 8px 10px; /* Mengatur ukuran gambar latar belakang */
+            
+            backgrou
         }
 
         .container {
@@ -69,7 +75,6 @@
 
         #name-input:focus {
             outline: none;
-            box-shadow: inset 4px 4px 8px var(--shadow-color), inset -4px -4px 8px #fff, 0 0 10px var(--highlight-color);
         }
 
         button {
@@ -79,7 +84,7 @@
             border-radius: 1vw;
             background-color: var(--element-bg-color);
             border: none;
-            box-shadow: 4px 4px 8px var(--shadow-color), -4px -4px 8px #fff;
+            box-shadow: 1px 1px 5px var(--shadow-color), -4px -4px 8px #fff;
             font-size: 1.2vw;
             color: var(--text-color);
             cursor: pointer; 
@@ -134,57 +139,65 @@
         }
     </style>
     <script>
-        function saveName() {
-            const name = document.getElementById('name-input').value;
-            localStorage.setItem('name', name);
-            window.location.href = '❤️.html';
+    function saveName() {
+        const nameInput = document.getElementById('name-input');
+        const name = nameInput.value.trim();
+
+        if (name === '') {
+            alert('Please enter your name to continue.');
+            alert('Masukan nama anda sebelum melanjutkan.')
+            return; // Stop the function if no name is provided
         }
 
-        // Mengatur posisi emoji saat diseret
-        let selectedEmoji = null;
-        let offsetX = 0;
-        let offsetY = 0;
+        localStorage.setItem('name', name);
+        window.location.href = '❤️.html'; // Replace with your desired next page
+    }
 
-        function startDrag(event, emoji) {
-            selectedEmoji = emoji;
-            offsetX = event.clientX - emoji.getBoundingClientRect().left;
-            offsetY = event.clientY - emoji.getBoundingClientRect().top;
+    // Drag and drop emoji functionality
+    let selectedEmoji = null;
+    let offsetX = 0;
+    let offsetY = 0;
 
-            document.addEventListener('mousemove', dragEmoji);
-            document.addEventListener('mouseup', stopDrag);
+    function startDrag(event, emoji) {
+        selectedEmoji = emoji;
+        offsetX = event.clientX - emoji.getBoundingClientRect().left;
+        offsetY = event.clientY - emoji.getBoundingClientRect().top;
+
+        document.addEventListener('mousemove', dragEmoji);
+        document.addEventListener('mouseup', stopDrag);
+    }
+
+    function dragEmoji(event) {
+        if (selectedEmoji) {
+            selectedEmoji.style.position = 'absolute';
+            selectedEmoji.style.left = event.clientX - offsetX + 'px';
+            selectedEmoji.style.top = event.clientY - offsetY + 'px';
         }
+    }
 
-        function dragEmoji(event) {
-            if (selectedEmoji) {
-                selectedEmoji.style.position = 'absolute';
-                selectedEmoji.style.left = event.clientX - offsetX + 'px';
-                selectedEmoji.style.top = event.clientY - offsetY + 'px';
-            }
+    function stopDrag() {
+        if (selectedEmoji) {
+            // Giving floating effect
+            selectedEmoji.style.transition = 'transform 0.5s ease';
+            const floatX = Math.random() * 20 - 10; // Random floating in X
+            const floatY = Math.random() * 20 - 10; // Random floating in Y
+            selectedEmoji.style.transform = `translate(${floatX}px, ${floatY}px)`;
+            
+            // Remove event listeners
+            document.removeEventListener('mousemove', dragEmoji);
+            document.removeEventListener('mouseup', stopDrag);
+            selectedEmoji = null;
         }
-
-        function stopDrag() {
-            if (selectedEmoji) {
-                // Memberikan efek melayang
-                selectedEmoji.style.transition = 'transform 0.5s ease';
-                const floatX = Math.random() * 20 - 10; // Mengambang acak di X
-                const floatY = Math.random() * 20 - 10; // Mengambang acak di Y
-                selectedEmoji.style.transform = `translate(${floatX}px, ${floatY}px)`;
-                
-                // Menghapus event listener
-                document.removeEventListener('mousemove', dragEmoji);
-                document.removeEventListener('mouseup', stopDrag);
-                selectedEmoji = null;
-            }
-        }
-    </script>
+    }
+</script>
 </head>
 
 <body>
     <div class="container">
         <h3 id="judul">Masukan Nama Kamu</h3>
         <div class="input-container">
-            <input type="text" id="name-input" placeholder="" maxlength="10" required>
-            <button type="button" onclick="saveName()">💌😬</button>
+            <input type="text" id="name-input" placeholder="Nama Kamu" maxlength="10" required>
+            <button type="button" onclick="saveName()">💌</button>
         </div>
     </div>
     <div class="emoji-container">
@@ -196,5 +209,4 @@
         <span class="emoji" onmousedown="startDrag(event, this)">😎</span>
     </div>
 </body>
-
 </html>
